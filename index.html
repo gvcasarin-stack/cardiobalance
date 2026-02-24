@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cardio Balance – Prenditi cura del tuo cuore</title>
+  <meta name="description" content="Cardio Balance aiuta a stabilizzare la pressione, normalizzare la frequenza cardiaca e migliorare il metabolismo." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      cursor: pointer;
+    }
+
+    /* ── Background: replica visual da página do produtor ── */
+    .page-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      display: flex;
+      flex-direction: column;
+      filter: blur(1px) brightness(0.72);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .bg-nav {
+      background: #1a4a7a;
+      padding: 14px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .bg-nav .logo { color: #fff; font-size: 22px; font-weight: 800; letter-spacing: 1px; }
+    .bg-nav .logo span { color: #e8732a; }
+    .bg-nav ul { list-style: none; display: flex; gap: 28px; }
+    .bg-nav ul li a { color: #cde; text-decoration: none; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .bg-nav .btn-nav { background: #e8732a; color: #fff; padding: 10px 22px; border-radius: 4px; font-weight: 700; font-size: 13px; text-transform: uppercase; }
+
+    .bg-hero {
+      flex: 1;
+      background: linear-gradient(135deg, #1a4a7a 0%, #2a6db5 50%, #f0f4f8 100%);
+      display: flex;
+      align-items: center;
+      padding: 0 60px;
+      gap: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .bg-hero::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0;
+      width: 42%;
+      height: 100%;
+      background: url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&q=60') center/cover no-repeat;
+      opacity: 0.55;
+    }
+    .bg-hero-text {
+      position: relative;
+      z-index: 1;
+      margin-left: 38%;
+    }
+    .bg-hero-text h1 {
+      font-size: 34px;
+      font-weight: 900;
+      color: #1a1a1a;
+      line-height: 1.2;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .bg-hero-text ul { list-style: none; margin-bottom: 24px; }
+    .bg-hero-text ul li {
+      color: #1a1a1a;
+      font-size: 16px;
+      margin-bottom: 8px;
+      padding-left: 22px;
+      position: relative;
+    }
+    .bg-hero-text ul li::before { content: '✓'; position: absolute; left: 0; color: #1a4a7a; font-weight: 700; }
+    .bg-btn { background: #e8732a; color: #fff; padding: 14px 36px; border-radius: 4px; font-weight: 700; font-size: 15px; text-transform: uppercase; display: inline-block; }
+
+    /* ── Full-page transparent overlay (captures any stray click) ── */
+    .overlay-capture {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      background: rgba(0,0,0,0.45);
+    }
+
+    /* ── Cookie Modal ── */
+    .cookie-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 20;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+      width: 520px;
+      max-width: 94vw;
+      padding: 36px 36px 28px;
+    }
+
+    .cookie-modal .close-btn {
+      position: absolute;
+      top: 14px;
+      right: 18px;
+      background: none;
+      border: none;
+      font-size: 22px;
+      color: #888;
+      cursor: pointer;
+      line-height: 1;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: color .2s;
+    }
+    .cookie-modal .close-btn:hover { color: #333; }
+
+    .cookie-modal h2 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #1a8a6e;
+      margin-bottom: 16px;
+    }
+
+    .cookie-modal p {
+      font-size: 14.5px;
+      color: #444;
+      line-height: 1.65;
+      margin-bottom: 24px;
+    }
+
+    .cookie-modal p a {
+      color: #e8732a;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .cookie-modal p a:hover { text-decoration: underline; }
+
+    .cookie-modal .btn-row {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .btn-accept {
+      flex: 1;
+      background: #e8732a;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 14px 0;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .btn-accept:hover { background: #d0641f; }
+
+    .btn-decline {
+      flex: 1;
+      background: #f0f0f0;
+      color: #444;
+      border: 1.5px solid #ddd;
+      border-radius: 6px;
+      padding: 14px 0;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .btn-decline:hover { background: #e2e2e2; }
+
+    .cookie-modal .links-row {
+      text-align: center;
+      margin-bottom: 14px;
+    }
+    .cookie-modal .links-row a {
+      color: #e8732a;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+    .cookie-modal .links-row a:hover { text-decoration: underline; }
+
+    .cookie-modal .disclaimer {
+      font-size: 11px;
+      color: #aaa;
+      text-align: center;
+      line-height: 1.5;
+      font-style: italic;
+    }
+
+    @media (max-width: 560px) {
+      .cookie-modal { padding: 28px 20px 22px; }
+      .cookie-modal h2 { font-size: 19px; }
+      .cookie-modal .btn-row { flex-direction: column; }
+      .bg-nav ul { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background visual -->
+  <div class="page-bg" aria-hidden="true">
+    <nav class="bg-nav">
+      <div class="logo"><span>CARDIO</span>BALANCE</div>
+      <ul>
+        <li><a href="#">Il problema</a></li>
+        <li><a href="#">Parere dell'esperto</a></li>
+        <li><a href="#">Composizione</a></li>
+        <li><a href="#">Le ricerche</a></li>
+        <li><a href="#">Recensioni</a></li>
+      </ul>
+      <span class="btn-nav">Acquista adesso</span>
+    </nav>
+    <div class="bg-hero">
+      <div class="bg-hero-text">
+        <h1>Cardio Balance<br>Prenditi cura<br>del tuo cuore</h1>
+        <ul>
+          <li>Stabilizza la pressione</li>
+          <li>Normalizza la frequenza cardiaca</li>
+          <li>Migliora il metabolismo</li>
+        </ul>
+        <span class="bg-btn">Acquista adesso</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Transparent full-page click capture -->
+  <div class="overlay-capture" onclick="goToOffer()"></div>
+
+  <!-- Cookie consent modal -->
+  <div class="cookie-modal" role="dialog" aria-modal="true" aria-labelledby="cookie-title">
+    <button class="close-btn" aria-label="Chiudi" onclick="goToOffer()">&#x2715;</button>
+
+    <h2 id="cookie-title">Our Cookie Policy</h2>
+
+    <p>
+      We use cookies to improve your experience, personalize content and ads,
+      provide social media features, and analyze our traffic. By continuing, you
+      accept our use of cookies.
+      <a href="javascript:void(0)" onclick="goToOffer()">Learn more</a>
+    </p>
+
+    <div class="btn-row">
+      <button class="btn-accept" onclick="goToOffer()">Accept</button>
+      <button class="btn-decline" onclick="goToOffer()">Decline</button>
+    </div>
+
+    <div class="links-row">
+      <a href="javascript:void(0)" onclick="goToOffer()">Terms of Service</a>
+      <span style="color:#ccc;">|</span>
+      <a href="javascript:void(0)" onclick="goToOffer()">Privacy Policy</a>
+    </div>
+
+    <p class="disclaimer">
+      The content on this website is provided "as is" without warranty. By continuing,
+      you accept our cookie policy and terms of use.
+    </p>
+  </div>
+
+  <script>
+    function goToOffer() {
+      window.location.href = 'https://it29.cardiobalanceoriginal.com/?utm_source=261283';
+    }
+
+    // Redirect on any key press as well
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') goToOffer();
+    });
+  </script>
+
+</body>
+</html>
